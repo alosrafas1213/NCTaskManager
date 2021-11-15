@@ -51,7 +51,6 @@ public class Task  {
 
     public void setTitle(String title){
         this.title = title;
-        return;
     }
 
     public boolean isActive(){
@@ -73,7 +72,7 @@ public class Task  {
      */
     public void setTime(int time){
         this.time = time;
-        if (this.repetitive == true) {
+        if (repetitive) {
             repetitive = false;
             start = 0;
             end = 0;
@@ -89,7 +88,7 @@ public class Task  {
      * it becomes a repetitive one
      */
     public void setTime(int start, int end, int interval){
-        if (repetitive==true){
+        if (repetitive){
             this.start = start;
             this.end = end;
             this.interval = interval;
@@ -129,7 +128,7 @@ public class Task  {
      */
 
     public int nextTimeAfter (int current){
-        if (repetitive==true){
+        if (repetitive){
             if (current<=start)
                 return start+interval;
             else{

@@ -72,11 +72,9 @@ public class Task  {
      */
     public void setTime(int time){
         this.time = time;
-        if (repetitive) {
-            repetitive = false;
-            start = 0;
-            end = 0;
-        }
+        repetitive = false;
+        start = 0;
+        end = 0;
     }
 
     /**
@@ -88,18 +86,11 @@ public class Task  {
      * it becomes a repetitive one
      */
     public void setTime(int start, int end, int interval){
-        if (repetitive){
-            this.start = start;
-            this.end = end;
-            this.interval = interval;
-        }
-        else {
-            this.time = 0;
-            this.start = start;
-            this.end = end;
-            this.interval = interval;
-            this.repetitive = true;
-        }
+         this.time = 0;
+         this.start = start;
+         this.end = end;
+         this.interval = interval;
+         this.repetitive = true;
     }
 
     public int getStartTime() {
@@ -128,19 +119,16 @@ public class Task  {
      */
 
     public int nextTimeAfter (int current){
-        if (repetitive){
+        if (repetitive && isActive){
             if (current<=start)
                 return start+interval;
             else{
                 if (current>end)
                     return -1;
-                else{
-                    for(int i=start+interval ; i<end ; i=i+interval){
-                        if (current<i) {
+                else
+                    for(int i=start+interval ; i<end ; i=i+interval)
+                        if (current<i)
                             return i;
-                        }
-                    }
-                }
             }
         }
         return -1;

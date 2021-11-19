@@ -16,11 +16,14 @@ public class TaskTest_1 {
         Task tarea1 = new Task("Tarea 1",5);
         Task tarea2 = new Task("Tarea 2",4,11,2);
 
+        tarea1.setActive(true);
+        tarea2.setActive(true);
+
         Assert.assertEquals("Tarea 1",tarea1.getTitle());
         tarea1.setTitle("Tarea Prueba");
         Assert.assertEquals("Tarea Prueba",tarea1.getTitle());
         Assert.assertFalse(tarea1.isRepeated());
-        Assert.assertFalse(tarea1.isActive());
+        Assert.assertTrue(tarea1.isActive());
         tarea1.setActive(true);
         Assert.assertTrue(tarea1.isActive());
         Assert.assertEquals(5,tarea1.getTime());
@@ -35,7 +38,7 @@ public class TaskTest_1 {
         Assert.assertEquals("Tarea 2",tarea2.getTitle());
         Assert.assertTrue(tarea2.isRepeated());
 
-        Assert.assertEquals(6,tarea2.nextTimeAfter(5));
+        Assert.assertEquals(6,tarea2.nextTimeAfter(4));
         Assert.assertEquals(6,tarea2.nextTimeAfter(3));
         Assert.assertEquals(10,tarea2.nextTimeAfter(8));
         Assert.assertEquals(-1,tarea2.nextTimeAfter(10));

@@ -40,7 +40,7 @@ public class TaskTest_1 {
 
         Assert.assertEquals(6,tarea2.nextTimeAfter(4));
         Assert.assertEquals(6,tarea2.nextTimeAfter(3));
-        Assert.assertEquals(10,tarea2.nextTimeAfter(8));
+        Assert.assertEquals(-1,tarea2.nextTimeAfter(8));
         Assert.assertEquals(-1,tarea2.nextTimeAfter(10));
         Assert.assertEquals(-1,tarea2.nextTimeAfter(12));
 

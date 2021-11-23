@@ -115,15 +115,15 @@ public class Task  {
      * Returns the next start time after the start time if the current time is
      * less than the current time, otherwise if the current time is greater than
      * the end time it returns -1, and it returns the next start time if the
-     * current time is less than the end time and greater than the start time
+     * current time is less than the end time and greater or equals than the start time
      */
 
     public int nextTimeAfter (int current){
-        if (repetitive && isActive){
-            if (current<=start)
-                return start+interval;
+        if (isActive){
+            if (current<=start || current<=time)
+                return start+interval+time;
             else{
-                if (current>end)
+                if (current>end || current>time)
                     return -1;
                 else
                     for(int i=start+interval ; i<end ; i=i+interval)

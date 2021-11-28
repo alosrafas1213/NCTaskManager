@@ -1,9 +1,9 @@
 package mx.edu.j2se.rubio.tasks;
 
-/*
+/**
 * @author  Alonso Rafael Rubio Carmona
 *
-* The class Task represents a repetitive and a non-repetitive task
+* The Task class represents a repetitive and a non-repetitive task
 * Both types of tasks have a defined time, in case of the non-repetitive ones
 * there is only one attribute time, the title of the task and the isActive flag
 * For the repetitive ones, there are two attributes of time, start and end,

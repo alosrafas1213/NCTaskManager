@@ -1,4 +1,5 @@
 package mx.edu.j2se.rubio.tasks.tests;
+import mx.edu.j2se.rubio.tasks.ArrayTaskList;
 import mx.edu.j2se.rubio.tasks.Task;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,43 +14,99 @@ import org.junit.Test;
 public class TaskTest_1 {
     @Test
     public void taskTests(){
-        Task tarea1 = new Task("Tarea 1",5);
-        Task tarea2 = new Task("Tarea 2",4,11,2);
+        //Non-Repetitive task
+        Task task1 = new Task("task 1",5);
 
-        tarea1.setActive(true);
-        tarea2.setActive(true);
+        //Repetitive task
+        Task task2 = new Task("task 2",4,11,2);
 
-        Assert.assertEquals("Tarea 1",tarea1.getTitle());
-        tarea1.setTitle("Tarea Prueba");
-        Assert.assertEquals("Tarea Prueba",tarea1.getTitle());
-        Assert.assertFalse(tarea1.isRepeated());
-        Assert.assertTrue(tarea1.isActive());
-        tarea1.setActive(true);
-        Assert.assertTrue(tarea1.isActive());
-        Assert.assertEquals(5,tarea1.getTime());
-        tarea1.setTime(6);
-        Assert.assertEquals(6,tarea1.getTime());
-        tarea1.setTime(6,10,1);
-        Assert.assertTrue(tarea1.isRepeated());
+        //Set both tasks active
+        task1.setActive(true);
+        task2.setActive(true);
 
 
+        repeatedTaskTest(task2);
+        nonRepeatedTaskTest(task1);
+
+        ArrayTaskList tasks = createTasksArray();
+        tasksArrayTest(tasks);
 
 
-        Assert.assertEquals("Tarea 2",tarea2.getTitle());
-        Assert.assertTrue(tarea2.isRepeated());
-
-        Assert.assertEquals(6,tarea2.nextTimeAfter(4));
-        Assert.assertEquals(6,tarea2.nextTimeAfter(3));
-        Assert.assertEquals(-1,tarea2.nextTimeAfter(8));
-        Assert.assertEquals(-1,tarea2.nextTimeAfter(10));
-        Assert.assertEquals(-1,tarea2.nextTimeAfter(12));
-
-        Assert.assertEquals(4,tarea2.getStartTime());
-        Assert.assertEquals(11,tarea2.getEndTime());
-        Assert.assertEquals(2,tarea2.getRepeatInterval());
-
-        Assert.assertTrue(tarea2.isRepeated());
-        tarea2.setTime(7);
-        Assert.assertFalse(tarea2.isRepeated());
     }
+
+    public void repeatedTaskTest(Task task){
+        //assertEquals Test with the getTitle method
+        Assert.assertEquals("task 2",task.getTitle());
+        //Task title is changed to Repeated task
+        task.setTitle("Repeated task");
+        //assertEquals with the new title after using the setTitle method
+        Assert.assertEquals("Repeated task",task.getTitle());
+        //assertTrue to verify if the task has been activated correctly
+        Assert.assertTrue(task.isActive());
+        //assertEquals to verify the StartTime and EndTime attributes defined before
+        //StartTime: 4    EndTime: 11
+        Assert.assertEquals(4,task.getStartTime());
+        Assert.assertEquals(11,task.getEndTime());
+        //assertEquals to verify the nextTimeAfter method
+        //Current time: 4      NextTime: 6
+        Assert.assertEquals(6,task.nextTimeAfter(4));
+        //Current time: 10      NextTime: -1
+        Assert.assertEquals(-1,task.nextTimeAfter(10));
+    }
+
+    public void nonRepeatedTaskTest(Task task){
+        //assertEquals Test with the getTitle method
+        Assert.assertEquals("task 1",task.getTitle());
+        //Task title is changed
+        task.setTitle("Non-repeated task");
+        //assertEquals with the new title after using the setTitle method
+        Assert.assertEquals("Non-repeated task",task.getTitle());
+        //assertTrue to verify if the task has been activated correctly
+        Assert.assertTrue(task.isActive());
+        //assertEquals to verify the time attribute
+        //time: 5
+        Assert.assertEquals(5,task.getTime());
+        //assertEquals to verify the nextTimeAfter method
+        //Current time: 4      NextTime: 6
+        Assert.assertEquals(5,task.nextTimeAfter(4));
+        //Current time: 10      NextTime: -1
+        Assert.assertEquals(-1,task.nextTimeAfter(10));
+
+    }
+
+    public ArrayTaskList createTasksArray(){
+        //Creates and adds tasks to the arrayTaskList
+        ArrayTaskList tasks = new ArrayTaskList();
+        tasks.add(new Task("task 1",5));
+        tasks.add(new Task("task 2",4,11,2));
+        tasks.add(new Task("task 3",10,25,4));
+        tasks.add(new Task("task 4",25));
+        tasks.add(new Task("task 5",20,31,1));
+        tasks.add(new Task("task 6",25,40,5));
+        tasks.add(new Task("task 7",52));
+        tasks.add(new Task("task 8",21,50,2));
+        //For loop to set all tasks as active
+        for(int index=0 ; index< tasks.size() ; index++)
+        {
+            tasks.getTask(index).setActive(true);
+        }
+
+        return tasks;
+    }
+
+    public void tasksArrayTest(ArrayTaskList tasks){
+        //AssertEquals to check the arrayTaskList size
+        Assert.assertEquals(8,tasks.size());
+        //One more task is added to verify again the size of the Array
+        Task testTask = new Task("task 9",1,11,2);
+        tasks.add(testTask);
+        Assert.assertEquals(9,tasks.size());
+        //The last task added is removed to check if the size of the array is correct
+        tasks.remove(testTask);
+        Assert.assertEquals(8,tasks.size());
+        //Generates a new arrayTaskList with the tasks between the time 1 and the time 40
+        //and it compares the size of the new array with the expected size of 4
+        Assert.assertEquals(4,tasks.incoming(15,40).size());
+    }
+
 }

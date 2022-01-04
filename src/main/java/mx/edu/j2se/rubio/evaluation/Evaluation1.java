@@ -11,12 +11,12 @@ public class Evaluation1 {
 
         Circle[] circleArray = {new Circle(40), new Circle(50), new Circle(20)};
 
-        Circle bigCircle = biggestCircle(circleArray);
+        int bigCircle = biggestCircle(circleArray);
 
-        System.out.println("Biggest circle radius is: " + bigCircle.getRadius());
+        System.out.println("Index of the Biggest circle radius is: " + bigCircle);
     }
 
-    public static Circle biggestCircle(Circle[] circleArray){
+    public static int biggestCircle(Circle[] circleArray){
         double biggestRadius = 0;
         int biggestIndex = 0;
 
@@ -26,6 +26,6 @@ public class Evaluation1 {
                 biggestIndex = index;
             }
         }
-        return circleArray[biggestIndex];
+        return biggestIndex;
     }
 }

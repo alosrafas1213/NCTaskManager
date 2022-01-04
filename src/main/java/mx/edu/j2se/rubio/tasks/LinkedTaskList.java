@@ -5,7 +5,7 @@ package mx.edu.j2se.rubio.tasks;
  * The LinkedTaskList class represents a Linked List of the tasks
  *
  * */
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
 
     private TaskNode head;
     private TaskNode tail;
@@ -41,12 +41,8 @@ public class LinkedTaskList {
             size++;
         }
         else{
-            TaskNode lastElement = head;
-            while (lastElement.nextElement != null) {
-                lastElement = lastElement.nextElement;
-            }
-
             // Insert the new_node at last node
+            TaskNode lastElement = tail;
             TaskNode newTask = new TaskNode(task,null,lastElement);
             lastElement.nextElement = newTask;
             tail = newTask;
@@ -94,6 +90,8 @@ public class LinkedTaskList {
     }
 
     public Task getTask(int index){
+        if (index>=size)
+            throw new IndexOutOfBoundsException("Index out of bounds");
         int count = 0;
         TaskNode lastElement = head;
         while (lastElement != null && count <= index) {
@@ -116,6 +114,8 @@ public class LinkedTaskList {
      * within the interval into the array
      **/
     public LinkedTaskList incoming(int from, int to){
+        if (from<0 || to<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
         LinkedTaskList taskSelection = new LinkedTaskList();
         TaskNode lastElement = head;
         if(head!=null) {

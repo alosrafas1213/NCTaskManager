@@ -24,7 +24,9 @@ public class Task  {
     * Constructor of the Task class with 2 attributes
     * used for the non-repetitive tasks
     * */
-    public Task(String title, int time){
+    public Task(String title, int time) throws IllegalArgumentException{
+        if (time<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
         this.title = title;
         this.time = time;
         this.isActive = false;
@@ -36,7 +38,9 @@ public class Task  {
      * Constructor of the Task class with 4 attributes
      * used for the repetitive tasks
      * */
-    public Task(String title, int start, int end, int interval){
+    public Task(String title, int start, int end, int interval) throws IllegalArgumentException{
+        if (start<0 || end<0 || interval<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
         this.title = title;
         this.start = start;
         this.end = end;
@@ -70,7 +74,9 @@ public class Task  {
      * @param time The time to be set
      * setTime method with one parameter, if the task was a repetitive one it becomes a non-repetitive one
      */
-    public void setTime(int time){
+    public void setTime(int time) throws IllegalArgumentException{
+        if (time<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
         this.time = time;
         repetitive = false;
         start = 0;
@@ -85,7 +91,9 @@ public class Task  {
      * setTime method with three parameters, if the task is a non-repetitive one
      * it becomes a repetitive one
      */
-    public void setTime(int start, int end, int interval){
+    public void setTime(int start, int end, int interval) throws IllegalArgumentException{
+        if (start<0 || end<0 || interval<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
          this.time = 0;
          this.start = start;
          this.end = end;
@@ -119,6 +127,8 @@ public class Task  {
      */
 
     public int nextTimeAfter (int current){
+        if (current<0)
+            throw new IllegalArgumentException("Values cannot be less than 1");
         if (isActive){
             if (current<=start || current<=time)
                 return start+interval+time;

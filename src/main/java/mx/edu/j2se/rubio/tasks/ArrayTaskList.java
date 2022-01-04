@@ -8,7 +8,7 @@ package mx.edu.j2se.rubio.tasks;
  *
  * */
 
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList{
     /**
     * Empty array of tasks
     * */
@@ -80,6 +80,8 @@ public class ArrayTaskList {
     }
 
     public Task getTask(int index){
+        if (index>=size())
+            throw new IndexOutOfBoundsException("Index out of bounds");
         return tasks[index];
     }
 
@@ -94,6 +96,8 @@ public class ArrayTaskList {
      * within the interval into the array
      **/
     public ArrayTaskList incoming(int from, int to){
+        if (from<0 || to<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
         ArrayTaskList taskSelection = new ArrayTaskList();
         for (Task task : tasks) {
             System.out.println("nextTimeAfter: "+task.nextTimeAfter(from));

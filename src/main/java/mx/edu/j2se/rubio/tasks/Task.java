@@ -1,5 +1,7 @@
 package mx.edu.j2se.rubio.tasks;
 
+import java.util.Objects;
+
 /**
 * @author  Alonso Rafael Rubio Carmona
 *
@@ -143,4 +145,34 @@ public class Task  {
         }
         return -1;
     }
+
+    @Override
+    public boolean equals(Object comparingTask) {
+        if (comparingTask == null || getClass() != comparingTask.getClass())
+            return false;
+        Task task = (Task) comparingTask;
+        boolean isEqual;
+        isEqual = time == task.time && start == task.start && end == task.end && interval == task.interval && isActive == task.isActive && repetitive == task.repetitive && Objects.equals(title, task.title);
+        return isEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, time, start, end, interval, isActive, repetitive);
+    }
+
+    @Override
+    public String toString() {
+        if (repetitive==true)
+            return "Task " + title + " -> Is repetitive: " + repetitive + ", Is Active: " + isActive + ", Time: " + time + ", Start Time: " + start + ", End Time: " + end + ", Interval: " + interval;
+        else
+        return "Task "+ title + " -> Is repetitive: " + repetitive + ", Is Active: " + isActive + ", Time: " + time;
+    }
+
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
 }

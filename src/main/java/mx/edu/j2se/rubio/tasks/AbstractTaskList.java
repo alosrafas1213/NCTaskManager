@@ -1,12 +1,37 @@
 package mx.edu.j2se.rubio.tasks;
 import java.util.Iterator;
+import java.util.stream.Stream;
+
 // Abstract class of the TaskList
 public abstract class AbstractTaskList implements Iterable<Task>, Cloneable{
     public abstract void add(Task task) throws Exception;
     public abstract boolean remove(Task task);
     public abstract int size();
     public abstract Task getTask(int index) throws Exception;
-    public abstract AbstractTaskList incoming(int from, int to);
+    public abstract Stream<Task> getStream();
+
+
+    public final AbstractTaskList incoming(int from, int to) throws IllegalArgumentException{
+        if (from<0 || to<0)
+            throw new IllegalArgumentException("Input values cannot be less than 1");
+        AbstractTaskList incomingTasks;
+        try {
+            incomingTasks = (this instanceof LinkedTaskList)?new LinkedTaskList():new ArrayTaskList();
+            Stream<Task> taskStream = this.getStream();
+            taskStream.filter(task -> task.nextTimeAfter(from) > from && task.nextTimeAfter(from) < to).forEach(task -> {
+                try {
+                    incomingTasks.add(task);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            return incomingTasks;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     @Override
@@ -83,5 +108,6 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable{
     protected AbstractTaskList clone() throws CloneNotSupportedException {
         return (AbstractTaskList) super.clone();
     }
+
 
 }

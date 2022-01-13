@@ -1,5 +1,9 @@
 package mx.edu.j2se.rubio.tasks;
 
+import java.util.stream.Stream;
+import java.util.Iterator;
+import java.util.Objects;
+
 /**
  * @author  Alonso Rafael Rubio Carmona
  *
@@ -85,26 +89,12 @@ public class ArrayTaskList extends AbstractTaskList{
         return tasks[index];
     }
 
-    /**
-     * @param from start time to check if there is a task
-     *            within the interval
-     * @param to end time to check if there is a tasks
-     *           whithin the interval
-     * @return ArrayTaskList of the tasks found in the time interval
-     *
-     * The method creates a new ArrayTaskList object to add the found tasks
-     * within the interval into the array
-     **/
-    public ArrayTaskList incoming(int from, int to){
-        if (from<0 || to<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
-        ArrayTaskList taskSelection = new ArrayTaskList();
-        for (Task task : tasks) {
-            System.out.println("nextTimeAfter: "+task.nextTimeAfter(from));
-            if (task.nextTimeAfter(from) > from && task.nextTimeAfter(from) < to) {
-                taskSelection.add(task);
-            }
-        }
-        return taskSelection;
+    @Override
+    public Stream<Task> getStream() {
+        Stream.Builder<Task> taskStream = Stream.builder();
+        for (Task task: this)
+            taskStream.add(task);
+        return taskStream.build();
     }
+
 }

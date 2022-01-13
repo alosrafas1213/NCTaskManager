@@ -1,4 +1,7 @@
 package mx.edu.j2se.rubio.tasks;
+
+import java.util.stream.Stream;
+
 /**
  * @author  Alonso Rafael Rubio Carmona
  *
@@ -103,32 +106,17 @@ public class LinkedTaskList extends AbstractTaskList {
         return null;
     }
 
-    /**
-     * @param from start time to check if there is a task
-     *            within the interval
-     * @param to end time to check if there is a tasks
-     *           within the interval
-     * @return LinkedTaskList of the tasks found in the time interval
-     *
-     * The method creates a new LinkedTaskList object to add the found tasks
-     * within the interval into the array
-     **/
-    public LinkedTaskList incoming(int from, int to){
-        if (from<0 || to<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
-        LinkedTaskList taskSelection = new LinkedTaskList();
-        TaskNode lastElement = head;
-        if(head!=null) {
-            if (lastElement.task.nextTimeAfter(from) > from && lastElement.task.nextTimeAfter(from) < to)
-                taskSelection.add(lastElement.task);
-            while (lastElement.nextElement != null) {
-                lastElement = lastElement.nextElement;
-                if (lastElement.task.nextTimeAfter(from) > from && lastElement.task.nextTimeAfter(from) < to)
-                    taskSelection.add(lastElement.task);
-            }
+    @Override
+    public Stream<Task> getStream() {
+        Stream.Builder<Task> taskStream = Stream.builder();
+        TaskNode task = this.head;
+        while (task != null) {
+            taskStream.add(task.task);
+            task = task.nextElement;
         }
-        return taskSelection;
+        return taskStream.build();
     }
+
 
     public String[] titles(){
         int index = 0;

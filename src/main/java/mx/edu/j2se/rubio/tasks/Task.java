@@ -1,5 +1,6 @@
 package mx.edu.j2se.rubio.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -15,20 +16,22 @@ import java.util.Objects;
 
 public class Task  {
     private String title;
-    private int time;
-    private int start;
-    private int end;
+    private LocalDateTime time;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private int interval;
     private boolean isActive;
     private boolean repetitive;
+    private LocalDateTime now;
 
     /*
     * Constructor of the Task class with 2 attributes
     * used for the non-repetitive tasks
     * */
-    public Task(String title, int time) throws IllegalArgumentException{
-        if (time<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
+    public Task(String title, LocalDateTime time) throws IllegalArgumentException{
+        this.now = LocalDateTime.now();
+        if (time.isBefore(now))
+            throw new IllegalArgumentException("Cannot create task in the past");
         this.title = title;
         this.time = time;
         this.isActive = false;
@@ -40,9 +43,14 @@ public class Task  {
      * Constructor of the Task class with 4 attributes
      * used for the repetitive tasks
      * */
-    public Task(String title, int start, int end, int interval) throws IllegalArgumentException{
-        if (start<0 || end<0 || interval<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval) throws IllegalArgumentException{
+        this.now = LocalDateTime.now();
+        if (start.isBefore(now))
+            throw new IllegalArgumentException("Cannot create task in the past");
+        if (end.isBefore(start))
+            throw new IllegalArgumentException("End time cannot be before the start time");
+        if (interval<0)
+            throw new IllegalArgumentException("Interval cannot be less or equal than 0");
         this.title = title;
         this.start = start;
         this.end = end;
@@ -67,7 +75,7 @@ public class Task  {
         isActive = active;
     }
 
-    public int getTime(){
+    public LocalDateTime getTime(){
         return time;
     }
 
@@ -76,13 +84,14 @@ public class Task  {
      * @param time The time to be set
      * setTime method with one parameter, if the task was a repetitive one it becomes a non-repetitive one
      */
-    public void setTime(int time) throws IllegalArgumentException{
-        if (time<0)
+    public void setTime(LocalDateTime time) throws IllegalArgumentException{
+        now = LocalDateTime.now();
+        if (time.isBefore(now))
             throw new IllegalArgumentException("Input values cannot be less than 1");
         this.time = time;
         repetitive = false;
-        start = 0;
-        end = 0;
+        start = null;
+        end = null;
     }
 
     /**
@@ -93,21 +102,26 @@ public class Task  {
      * setTime method with three parameters, if the task is a non-repetitive one
      * it becomes a repetitive one
      */
-    public void setTime(int start, int end, int interval) throws IllegalArgumentException{
-        if (start<0 || end<0 || interval<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
-         this.time = 0;
+    public void setTime(LocalDateTime start, LocalDateTime end, int interval) throws IllegalArgumentException{
+        now = LocalDateTime.now();
+        if (start.isBefore(now))
+            throw new IllegalArgumentException("Cannot create task in the past");
+        if (end.isBefore(start))
+            throw new IllegalArgumentException("End time cannot be before the start time");
+        if (interval<0)
+            throw new IllegalArgumentException("Interval cannot be less or equal than 0");
+         this.time = null;
          this.start = start;
          this.end = end;
          this.interval = interval;
          this.repetitive = true;
     }
 
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return start;
     }
 
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return end;
     }
 
@@ -128,22 +142,29 @@ public class Task  {
      * current time is less than the end time and greater or equals than the start time
      */
 
-    public int nextTimeAfter (int current){
-        if (current<0)
-            throw new IllegalArgumentException("Values cannot be less than 1");
+    public LocalDateTime nextTimeAfter (LocalDateTime current){
         if (isActive){
-            if (current<=start || current<=time)
-                return start+interval+time;
+            if (current.isBefore(start) && isRepeated())
+                return start.plusHours(interval);
+            if (current.isBefore(time) && !isRepeated())
+                return time;
             else{
-                if (current>end || current>time)
-                    return -1;
+                if (current.isAfter(end) && isRepeated())
+                    return LocalDateTime.MIN;
+                if (current.isAfter(time) && !isRepeated())
+                    return LocalDateTime.MIN;
                 else
-                    for(int i=start+interval ; i<end ; i=i+interval)
-                        if (current<i)
-                            return i;
+                    if(isRepeated()) {
+                        LocalDateTime date = start;
+                        while (date.isBefore(end)){
+                            if (current.isBefore(date))
+                                return date;
+                            date = date.plusHours(interval);
+                        }
+                    }
             }
         }
-        return -1;
+        return LocalDateTime.MIN;
     }
 
     @Override

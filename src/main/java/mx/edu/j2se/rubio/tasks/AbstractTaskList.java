@@ -1,4 +1,5 @@
 package mx.edu.j2se.rubio.tasks;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -11,14 +12,17 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable{
     public abstract Stream<Task> getStream();
 
 
-    public final AbstractTaskList incoming(int from, int to) throws IllegalArgumentException{
-        if (from<0 || to<0)
-            throw new IllegalArgumentException("Input values cannot be less than 1");
+    /*
+    public final AbstractTaskList incoming(LocalDateTime from, LocalDateTime to) throws IllegalArgumentException{
+        if (from.isBefore(LocalDateTime.now()))
+            throw new IllegalArgumentException("Incoming tasks cannot be in the past");
+        if (to.isBefore(from))
+            throw new IllegalArgumentException("Incoming tasks interval error");
         AbstractTaskList incomingTasks;
         try {
             incomingTasks = (this instanceof LinkedTaskList)?new LinkedTaskList():new ArrayTaskList();
             Stream<Task> taskStream = this.getStream();
-            taskStream.filter(task -> task.nextTimeAfter(from) > from && task.nextTimeAfter(from) < to).forEach(task -> {
+            taskStream.filter(task -> task.nextTimeAfter(from).isAfter(from) && task.nextTimeAfter(from).isBefore(to)).forEach(task -> {
                 try {
                     incomingTasks.add(task);
                 } catch (Exception e) {
@@ -32,7 +36,7 @@ public abstract class AbstractTaskList implements Iterable<Task>, Cloneable{
         }
         return null;
     }
-
+*/
 
     @Override
     public Iterator<Task> iterator() {
